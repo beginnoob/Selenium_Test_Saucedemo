@@ -56,3 +56,10 @@ The automation script simulates user interactions on a web application, includin
 1. Install dependencies:
 ```bash
 pip install selenium
+```
+2. Download and setup ChromeDriver
+Make sure the ChromeDriver version matches your Chrome browser
+3. Run the script:
+```
+python login_saeuce.py
+```
