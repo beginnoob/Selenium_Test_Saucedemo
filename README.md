@@ -61,5 +61,5 @@ pip install selenium
 Make sure the ChromeDriver version matches your Chrome browser
 3. Run the script:
 ```
-python login_saeuce.py
+python login_sauce.py
 ```
