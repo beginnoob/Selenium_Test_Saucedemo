@@ -44,6 +44,8 @@ def open_website(driver, url):
     time.sleep(2)
 
 def login(driver, username, password):
+    driver.find_element(By.ID, "user-name").clear()
+    driver.find_element(By.ID, "password").clear()
     driver.find_element(By.ID, "user-name").send_keys(username)
     driver.find_element(By.ID, "password").send_keys(password)
     driver.find_element(By.ID, "login-button").click()
@@ -57,6 +59,20 @@ def verify_login(driver):
             print("Login Failed ❌")
     except:
         print("Element not found ❌")
+def verify_login_failed(driver,expected_message):
+    try:
+        wait = WebDriverWait(driver,5)
+        error_element= wait.until(EC.visibility_of_element_located((By.XPATH,"//h3[@data-test='error']")))
+        error_text = error_element.text.lower()
+        assert "inventory" not in driver.current_url, "Harusnya tidak berpindah halaman!"
+        assert expected_message.lower() in error_text, \
+            f"Expected '{expected_message}' tapi error message: '{error_element.text}'"
+        print(f"Login Correctly Failed ✅ | Error: '{error_element.text}'")
+        
+    except AssertionError as e:
+        print(f"Assertion Error ❌: {e}")
+    except Exception as e:
+        print(f"Error element not found ❌: {e}")
 
 def open_sidebar(driver):
     driver.find_element(By.ID, "react-burger-menu-btn").click()
@@ -128,11 +144,36 @@ def main():
     logout(driver)
     verify_logout(driver)
 
+    # Locked out user
+    login(driver, "locked_out_user", "secret_sauce")
+    verify_login_failed(driver, expected_message="locked out")
+
+    # Wrong password
+    open_website(driver, "https://www.saucedemo.com/")  # reset halaman
+    login(driver, "standard_user", "wrong_password")
+    verify_login_failed(driver, expected_message="do not match")
+
+    # Unregistered username
+    open_website(driver, "https://www.saucedemo.com/")
+    login(driver, "unknown_user", "secret_sauce")
+    verify_login_failed(driver, expected_message="do not match")
+
+    # Empty username")
+    open_website(driver, "https://www.saucedemo.com/")
+    login(driver, "", "secret_sauce")
+    verify_login_failed(driver, expected_message="username is required")
+
+    # Empty password
+    open_website(driver, "https://www.saucedemo.com/")
+    login(driver, "standard_user", "")
+    verify_login_failed(driver, expected_message="password is required")
+
+    # Both fields empty
+    open_website(driver, "https://www.saucedemo.com/")
+    login(driver, "", "")
+    verify_login_failed(driver, expected_message="username is required")
+    
     close_browser(driver)
-
-
-
-
 
 
 
