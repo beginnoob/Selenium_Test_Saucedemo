@@ -103,6 +103,9 @@ def close_browser(driver):
 def main():
     driver = setup_driver()
     open_website(driver, "https://www.saucedemo.com/")
+
+    print("\n = Positive Test Cases =")
+    print("\n Standard user")
     login(driver, "standard_user", "secret_sauce")
     verify_login(driver)
     open_sidebar(driver)
@@ -117,6 +120,7 @@ def main():
     # verify_logout(driver)
     # time.sleep(1)
 
+    print("\n Problem user")
     login(driver, "problem_user", "secret_sauce")
     verify_login(driver)
     open_sidebar(driver)
@@ -124,6 +128,7 @@ def main():
     verify_logout(driver)
     time.sleep(1)
 
+    print("\n Performance glitch user")
     login(driver, "performance_glitch_user", "secret_sauce")
     verify_login(driver)
     open_sidebar(driver)
@@ -131,6 +136,7 @@ def main():
     verify_logout(driver)
     time.sleep(1)
 
+    print("\n Error user")
     login(driver, "error_user", "secret_sauce")
     verify_login(driver)
     open_sidebar(driver)
@@ -138,37 +144,39 @@ def main():
     verify_logout(driver)
     time.sleep(1)
 
+    print("\n Visual user")
     login(driver, "visual_user", "secret_sauce")
     verify_login(driver)
     open_sidebar(driver)
     logout(driver)
     verify_logout(driver)
 
-    # Locked out user
+    print("\n = Negative Test Cases = ")
+    print("\n Locked out user")
     login(driver, "locked_out_user", "secret_sauce")
     verify_login_failed(driver, expected_message="locked out")
 
-    # Wrong password
+    print("\n Wrong password")
     open_website(driver, "https://www.saucedemo.com/")  # reset halaman
     login(driver, "standard_user", "wrong_password")
     verify_login_failed(driver, expected_message="do not match")
 
-    # Unregistered username
+    print("\n Unregistered username")
     open_website(driver, "https://www.saucedemo.com/")
     login(driver, "unknown_user", "secret_sauce")
     verify_login_failed(driver, expected_message="do not match")
 
-    # Empty username")
+    print("\n Empty username")
     open_website(driver, "https://www.saucedemo.com/")
     login(driver, "", "secret_sauce")
     verify_login_failed(driver, expected_message="username is required")
 
-    # Empty password
+    print("\n Empty password")
     open_website(driver, "https://www.saucedemo.com/")
     login(driver, "standard_user", "")
     verify_login_failed(driver, expected_message="password is required")
 
-    # Both fields empty
+    print("\n Both fields empty")
     open_website(driver, "https://www.saucedemo.com/")
     login(driver, "", "")
     verify_login_failed(driver, expected_message="username is required")
